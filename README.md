@@ -34,6 +34,8 @@ BankSystem مسؤول عن:
 List<String> accountOwners;
 List<Double> balances;
 List<String> accountTypes;
+```
+
 يؤدي إلى أخطاء تزامن بين القوائم
 
 صعوبة الصيانة
@@ -70,6 +72,7 @@ Prototype	تكرار الحساب
 SOLID (SRP)	فصل المسؤوليات
 ④ النسخة المحسّنة من الكود
 🔹 Account (نمط Prototype)
+```java
 public abstract class Account implements Cloneable {
     protected String owner;
     protected double balance;
@@ -100,8 +103,10 @@ public abstract class Account implements Cloneable {
         }
     }
 }
+```
 
 🔹 حسابات مختلفة
+```java
 public class StandardAccount extends Account {
     public StandardAccount(String owner, double balance) {
         super(owner, balance);
@@ -113,8 +118,10 @@ public class PremiumAccount extends Account {
         super(owner, balance);
     }
 }
+```
 
 🔹 Factory Method لإنشاء الحسابات
+```java
 public class AccountFactory {
     public static Account createAccount(String owner, double balance, boolean premium) {
         return premium ?
@@ -122,8 +129,10 @@ public class AccountFactory {
                 new StandardAccount(owner, balance);
     }
 }
+```
 
 🔹 Strategy للإشعارات
+```java
 public interface NotificationStrategy {
     void send(String message);
 }
@@ -139,15 +148,19 @@ public class EmailNotification implements NotificationStrategy {
         System.out.println("EMAIL: " + message);
     }
 }
+```
 
 🔹 Logger (مسؤولية مستقلة)
+```java
 public class Logger {
     public static void log(String msg) {
         System.out.println("[LOG] " + msg);
     }
 }
+```
 
 🔹 BankSystem (Singleton + منطق بنكي فقط)
+```java
 import java.util.*;
 
 public class BankSystem {
@@ -208,8 +221,10 @@ public class BankSystem {
                 System.out.println(k + " | " + v.getBalance()));
     }
 }
+```
 
 🔹 Main
+```java
 public class MainApp {
     public static void main(String[] args) {
 
@@ -227,15 +242,12 @@ public class MainApp {
         bank.printAccounts();
     }
 }
+```
 
 ⑤ شرح مختصر لكل نمط (للاختبار)
 
 Singleton: ضمان وجود نسخة واحدة من النظام البنكي
-
 Factory Method: فصل منطق إنشاء الحسابات عن النظام
-
 Strategy: تغيير طريقة الإشعارات دون تعديل الكود
-
 Prototype: نسخ الحسابات بسهولة
-
 SRP (Single Responsibility Principle): كل صنف مسؤول عن مهمة واحدة
